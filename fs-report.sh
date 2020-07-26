@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NR_BBLOCKS_TEST=(1 32 512 4096 16384 65536)
+NR_BBLOCKS_TEST=(0 1 4 16 64 256 1024 4096 16384 65536)
 FS_TO_TEST=(testext2fyp testext2orig)
 PREFIX=dust
 REPORT_DIR=${REPORT_DIR:-report}
@@ -35,7 +35,10 @@ for NR_BBLOCKS in "${NR_BBLOCKS_TEST[@]}"; do
 		else
 			$EXEC_SUDO mount -t ext2 -o ro "$DEV" "$MNT"
 		fi
-		./fs-walker "$MNT" 2> "$TEST_REPORT_DIR/fs-walker.stderr.log" > "$TEST_REPORT_DIR/fs-walker.stdout.log"
+
+		RESULT_DIR="$TEST_REPORT_DIR/$FS"
+		mkdir -p "$RESULT_DIR"
+		./fs-walker "$MNT" 2> "$RESULT_DIR/fs-walker.stderr.log" > "$RESULT_DIR/fs-walker.stdout.log"
 		wait
 		$EXEC_SUDO umount -f "$MNT"
 
