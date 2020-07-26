@@ -8,5 +8,5 @@ if [[ -z $INPUT_BBLIST ]]; then
 fi
 
 for bblock in `cat "$INPUT_BBLIST"`; do
-	dmsetup message $DM_NAME 0 removebadblock $((bblock / 8))
+	dmsetup message $DM_NAME 0 removebadblock $((bblock / 8 * 8))
 done
