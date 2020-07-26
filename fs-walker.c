@@ -80,11 +80,11 @@ visit_file(const char *filename, struct stat *statbuf)
 		off += xmit;
 		if (is_huge_file && off * 100 / filesize > progress) {
 			progress = off * 100 / filesize;
-			printf("\rReading file %s, progress: (%5d%%)", filename, progress);
+			fprintf(stderr, "\rReading file %s, progress: (%5d%%)", filename, progress);
 		}
 	}
-	if (huge_file)
-			printf("\n");
+	if (is_huge_file)
+			fprintf(stderr, "\n");
 
 	if (has_error)
 		goto error_file;
@@ -206,7 +206,7 @@ main(int argc, char **argv)
 			break;
 		}
 		if (ent->fts_path)
-			printf("Visited %s\n", ent->fts_path);
+			fprintf(stderr, "Visited %s\n", ent->fts_path);
 	}
 
 	fts_close(fts);
