@@ -117,8 +117,11 @@ visit_dir(const char *dirname)
 		return;
 	}
 
-	while ((ent = readdir(dir)) != NULL)
+	errno = 0;
+	while ((ent = readdir(dir)) != NULL) {
 		n++;
+		errno = 0;
+	}
 	if (errno) {
 		if (!n)
 			status_error_directory++;
@@ -168,7 +171,7 @@ main(int argc, char **argv)
 			huge_file_thresh = vi;
 	}
 
-	fts = fts_open(argv + 1, FTS_PHYSICAL | FTS_XDEV, NULL);
+	fts = fts_open(argv + 1, FTS_PHYSICAL | FTS_XDEV | FTS_NOCHDIR, NULL);
 
 	while ((ent = fts_read(fts)) != NULL) {
 		switch (ent->fts_info) {
