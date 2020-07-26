@@ -198,10 +198,13 @@ main(int argc, char **argv)
 		default:
 			break;
 		}
+		if (ent->fts_path)
+			printf("Visited %s\n", ent->fts_path);
 	}
 
 	fts_close(fts);
 
+	printf("=================================\n");
 	print_stat();
 
 	return EXIT_SUCCESS;
