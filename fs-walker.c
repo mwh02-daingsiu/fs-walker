@@ -143,11 +143,11 @@ print_stat()
 	printf("=================================\n");
 	printf("status_all_file_total_chunks: %llu\n", status_all_file_total_chunks);
 	printf("status_all_file_missing_chunks: %llu\n", status_all_file_missing_chunks);
-	printf("status_all_file_total_chunks: %llu\n", status_all_file_good_chunks);
-	printf("================================= (For files bigger or equal to %lld)\n", (long long)huge_file_thresh);
+	printf("status_all_file_good_chunks: %llu\n", status_all_file_good_chunks);
+	printf("================================= (For files bigger or equal to %lld bytes)\n", (long long)huge_file_thresh);
 	printf("status_huge_file_total_chunks: %llu\n", status_huge_file_total_chunks);
 	printf("status_huge_file_missing_chunks: %llu\n", status_huge_file_missing_chunks);
-	printf("status_huge_file_total_chunks: %llu\n", status_huge_file_good_chunks);
+	printf("status_huge_file_good_chunks: %llu\n", status_huge_file_good_chunks);
 }
 
 int
