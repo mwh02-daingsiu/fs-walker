@@ -1,2 +1,2 @@
-fs-walker: fs-walker.cpp
-	$(CXX) -ggdb $^ -o $@
+fs-walker: fs-walker.c
+	$(CC) -ggdb $^ -o $@

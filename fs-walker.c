@@ -2,14 +2,13 @@
 
 #include <fts.h>
 #include <fcntl.h>
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <dirent.h>
 #include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <vector>
 
 static unsigned long long status_completed_directory = 0;
 static unsigned long long status_completed_file = 0;
@@ -35,11 +34,13 @@ visit_file(const char *filename, struct stat *statbuf)
 {
 	off_t filesize = statbuf->st_size;
 	unsigned long readunit = statbuf->st_blksize;
-	std::vector<char> buf(readunit);
 	off_t off = 0, readbytes = 0;
 	int fd = -1;
 	int is_huge_file = !!(filesize >= huge_file_thresh);
 	int has_error = 0;
+	void *buf = NULL;
+
+	buf = malloc(readunit);
 
 	if (readunit == 0 || readunit > max_legal_readunit) {
 		goto error_file;
@@ -52,7 +53,7 @@ visit_file(const char *filename, struct stat *statbuf)
 
 	while (off < filesize) {
 		size_t xmit = (filesize - off < readunit) ? filesize - off : readunit;
-		ssize_t r = pread(fd, &buf[0], xmit, off);
+		ssize_t r = pread(fd, buf, xmit, off);
 		if (r != 0) {
 			status_all_file_total_chunks++;
 			if (is_huge_file)
@@ -82,11 +83,13 @@ visit_file(const char *filename, struct stat *statbuf)
 		goto error_file;
 
 ok_file:
+	free(buf);
 	status_completed_file++;
 	close(fd);
 	return;
 
 error_file:
+	free(buf);
 	if (!readbytes)
 		status_error_file++;
 	else
