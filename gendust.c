@@ -10,7 +10,7 @@
 #include <inttypes.h>
 #include <sys/random.h>
 
-static const unsigned int block_size = 4096;
+static unsigned int block_size = 4096;
 
 static void
 gen_bad_blocks(uint64_t fs_blocks, uint64_t nr_bblock, uint64_t start_block, FILE *fout)
@@ -42,6 +42,7 @@ main(int argc, char **argv)
 	unsigned long long nr_bblocks = 0;
 	unsigned long long start_block = 0;
 	unsigned long long fs_blocks = 0;
+	const char *bsizestr;
 
 	if (argc != 4)
 		return EXIT_FAILURE;
@@ -61,6 +62,19 @@ main(int argc, char **argv)
 	if (errno) {
 		fprintf(stderr, "Failed to parse start_block\n");
 		return EXIT_FAILURE;
+	}
+
+	bsizestr = getenv("BLOCK_SIZE");
+	if (bsizestr) {
+		unsigned long v;
+
+		errno = 0;
+		v = strtoul(bsizestr, NULL, 0);
+		if (errno) {
+			fprintf(stderr, "Failed to parse BLOCK_SIZE\n");
+			return EXIT_FAILURE;
+		}
+		block_size = v;
 	}
 
 	fs_blocks = device_size / (block_size / 512);
