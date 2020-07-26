@@ -24,6 +24,9 @@ for NR_BBLOCKS in "${NR_BBLOCKS_TEST[@]}"; do
 		DEV="/dev/mapper/$DM_NAME"
 		MNT="/media/$DM_NAME"
 
+		$EXEC_SUDO sync
+		$EXEC_SUDO tee /proc/sys/vm/drop_caches <<< 3
+
 		$EXEC_SUDO dmsetup create "$DM_NAME" --table "0 $DEV_SIZE dust /dev/disk/by-label/$FS 0 512"
 		$EXEC_SUDO -E ./ADD_BBLOCKS.sh
 		$EXEC_SUDO dmsetup message "$DM_NAME" 0 enable
