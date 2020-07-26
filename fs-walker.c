@@ -27,7 +27,7 @@ static unsigned long long status_huge_file_missing_chunks = 0;
 static unsigned long long status_huge_file_good_chunks = 0;
 
 static unsigned long max_legal_readunit = 65536;
-static off_t huge_file_thresh = 16384ull * 1024 * 1024 * 1024;
+static off_t huge_file_thresh = 1ull * 1024 * 1024 * 1024;
 
 static void
 visit_file(const char *filename, struct stat *statbuf)
@@ -38,6 +38,7 @@ visit_file(const char *filename, struct stat *statbuf)
 	int fd = -1;
 	int is_huge_file = !!(filesize >= huge_file_thresh);
 	int has_error = 0;
+	int progress = -1;
 	void *buf = NULL;
 
 	buf = malloc(readunit);
@@ -77,7 +78,13 @@ visit_file(const char *filename, struct stat *statbuf)
 		if (r > 0)
 			readbytes += r;
 		off += xmit;
+		if (is_huge_file && off * 100 / filesize > progress) {
+			progress = off * 100 / filesize;
+			printf("\rReading file %s, progress: (%5d%%)", filename, progress);
+		}
 	}
+	if (huge_file)
+			printf("\n");
 
 	if (has_error)
 		goto error_file;
