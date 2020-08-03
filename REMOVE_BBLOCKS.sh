@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# PATH to bad block list file
 INPUT_BBLIST=${INPUT_BBLIST:-$1}
+# Block size to test
 BLOCK_SIZE=${BLOCK_SIZE:-4096}
 
 if [[ -z $INPUT_BBLIST ]]; then

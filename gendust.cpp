@@ -41,7 +41,7 @@ gen_bad_blocks(uint64_t fs_blocks, uint64_t nr_bblock, uint64_t start_block, FIL
 }
 
 //
-// Usage: gendust device_size number_of_bad_blocks start_block
+// Usage: gendust device_size(512bytes-sized sectors) number_of_bad_blocks(4K sized) start_block(4K sized)
 //
 int
 main(int argc, char **argv)

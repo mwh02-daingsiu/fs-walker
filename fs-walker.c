@@ -11,19 +11,31 @@
 #include <unistd.h>
 
 static unsigned long long status_completed_directory = 0;
+/* Good files */
 static unsigned long long status_completed_file = 0;
+/* Totally unreadable directories */
 static unsigned long long status_error_directory = 0;
+/* Totally unreadable files */
 static unsigned long long status_error_file = 0;
+/* Unused now */
 static unsigned long long status_partial_directory = 0;
+/* Files with a mix of good and missing contents */
 static unsigned long long status_partial_file = 0;
+/* Unspecified error cases due to broken metadata */
 static unsigned long long status_undefined_error = 0;
 
+/* Total number of blocks of all files in the file system, this includes huge files */
 static unsigned long long status_all_file_total_chunks = 0;
+/* Missing number of blocks of all files in the file system, this includes huge files */
 static unsigned long long status_all_file_missing_chunks = 0;
+/* Good number of blocks of all files in the file system, this includes huge files */
 static unsigned long long status_all_file_good_chunks = 0;
 
+/* Total number of blocks of huge-sized files in the file system */
 static unsigned long long status_huge_file_total_chunks = 0;
+/* Missing number of blocks of huge-sized files in the file system */
 static unsigned long long status_huge_file_missing_chunks = 0;
+/* Good number of blocks of huge-sized files in the file system */
 static unsigned long long status_huge_file_good_chunks = 0;
 
 static unsigned long max_legal_readunit = 65536;
@@ -52,6 +64,7 @@ visit_file(const char *filename, struct stat *statbuf)
 		goto error_file;
 	}
 
+	/* Read every portion of a given file */
 	while (off < filesize) {
 		size_t xmit = (filesize - off < readunit) ? filesize - off : readunit;
 		ssize_t r = pread(fd, buf, xmit, off);
